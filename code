@@ -1,0 +1,58 @@
+import xml.etree.ElementTree as ET
+import dateutil.parser as dp
+import pandas as pd
+from matplotlib import pyplot as plt
+
+filename = 'your_filename'
+
+tree = ET.parse(filename)
+root = tree.getroot()
+run = root[0][0]
+
+#checking elements inside our tree
+for x in root[0][0][1][5]:
+    print(x)
+
+NAMESPACES = {
+    'ns': 'http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2',
+    'ns2': 'http://www.garmin.com/xmlschemas/UserProfile/v2',
+    'ns3': 'http://www.garmin.com/xmlschemas/ActivityExtension/v2',
+    'ns4': 'http://www.garmin.com/xmlschemas/ProfileExtension/v1',
+    'ns5': 'http://www.garmin.com/xmlschemas/ActivityGoals/v1'
+}
+
+#build our data frame with the data we want, you can choose from the available data from your 
+#activity and round/change the type of variable if you want to work with less decimals
+data_list = []
+for lap_number, lap in enumerate(run.findall('ns:Lap', NAMESPACES)):
+    for tp in lap.find('ns:Track', NAMESPACES).findall('ns:Trackpoint', NAMESPACES):
+        data = {}
+        data['Time'] = dp.parse(tp.find('ns:Time', NAMESPACES).text)
+        data['Elevation'] = round(float(tp.find('ns:AltitudeMeters', NAMESPACES).text), 4)
+        data['Distance'] = round(float(tp.find('ns:DistanceMeters', NAMESPACES).text), 2)
+        data['Heart_rate'] = int(tp.find('ns:HeartRateBpm', NAMESPACES)[0].text)
+        data['Speed'] = round(float(tp.find('ns:Extensions', NAMESPACES)[0][0].text), 3)
+        data['Lap'] = lap_number+1
+        data_list.append(data)
+df = pd.DataFrame(data_list)
+
+#visualize data frame
+print(df)
+
+#plot with the color codes
+#(the zones will vary for every person, as it depends on your performance, check the
+#last section after the plots to change the limits here)
+x = df['Distance']
+y = df['Heart_rate']
+plt.plot(x,y, color='black', linewidth=0.4)
+plt.ylim(min(y), max(y))
+plt.xlim(0,max(x))
+plt.ylabel('Heart rate (BPM)')
+plt.xlabel('Distance (m)')
+plt.title('HR coloured by zones')
+plt.fill_between(x,y,0, where=(y>=(min(y)))&(y<=123), facecolor='royalblue')
+plt.fill_between(x,y,0, where=(y>=124)&(y<=144), facecolor='limegreen')
+plt.fill_between(x,y,0, where=(y>=145)&(y<=165), facecolor='yellow')
+plt.fill_between(x,y,0, where=(y>=166)&(y<=185), facecolor='orange')
+plt.fill_between(x,y,0, where=(y>=186), facecolor='red')
+plt.show()
