@@ -9,3 +9,11 @@ The code also includes how to transform our TCX file into a more understandable 
 Reference image:
 
 ![HR_zones](https://github.com/natashahrycan/garminhrzones/assets/86319465/2024785d-2759-4854-961f-7914a866f395)
+
+
+
+Aditionally, if you want to take a look at your elevation and your HR at the same time, you can assign a color map for the dots that make up your plot.
+
+
+Reference image:
+
