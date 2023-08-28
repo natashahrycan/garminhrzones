@@ -56,3 +56,11 @@ plt.fill_between(x,y,0, where=(y>=145)&(y<=165), facecolor='yellow')
 plt.fill_between(x,y,0, where=(y>=166)&(y<=185), facecolor='orange')
 plt.fill_between(x,y,0, where=(y>=186), facecolor='red')
 plt.show()
+
+#if you want to add the elevation colormap as well, replace line 47 with:
+#plt.scatter(x,y, c=z, cmap='winter_r', linewidth=5)
+#and add these lines:
+#z = df['Elevation']
+#cbar = plt.colorbar()
+#cbar.set_label('Elevation (m)', rotation=90)
+
