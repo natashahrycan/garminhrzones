@@ -17,3 +17,4 @@ Aditionally, if you want to take a look at your elevation and your HR at the sam
 
 Reference image:
 
+![output](https://github.com/natashahrycan/garminhrzones/assets/86319465/9b09214e-1909-41ea-bde3-5c8d1e3a341c)
